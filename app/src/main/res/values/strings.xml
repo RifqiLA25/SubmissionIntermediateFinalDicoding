@@ -1,0 +1,36 @@
+<resources>
+    <string name="app_name">Initial Submission</string>
+    <string name="signup">Register</string>
+    <string name="login">Login</string>
+    <string name="message_welcome_page">Featuring Stories that Stand Out and Can Keep You Captivated</string>
+    <string name="title_welcome_page">Welcome to the Story App!</string>
+    <string name="title_signup_page">Enter your details below</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="message_login_page">Fill in the data below well</string>
+    <string name="title_login_page">Sign In To find out how interesting this application is</string>
+    <string name="name">Name</string>
+    <string name="message_main_page">Happy Best Story Viewing.</string>
+    <string name="logout">Logout</string>
+    <string name="edt_text_email_register_page"> Enter your Email</string>
+    <string name="edt_text_person_register_page"> Your Full Name</string>
+    <string name="list_gambar">Image List</string>
+    <string name="title_story">Movie Title</string>
+    <string name="deskripsi_story">Description</string>
+    <string name="add_item">Add Item</string>
+    <string name="home_story">Home Story</string>
+    <string name="camera_x">Camera X</string>
+    <string name="input_gallery">Gallery</string>
+    <string name="btn_upload">Upload</string>
+    <string name="take_image">Take Gambar</string>
+    <string name="empty_image_warning">No Image</string>
+    <string name="title_activity_maps">MapsActivity</string>
+    <string name="str_language">Language</string>
+    <string name="string_maps">Maps</string>
+    <string name="retry">Retry</string>
+    <string name="failed">Failed to upload image</string>
+    <string name="succes">Success</string>
+    <string name="ok">OK</string>
+    <string name="img_upload_succes">Upload Image Succes</string>
+    <string name="add_location">Add Location</string>
+</resources>

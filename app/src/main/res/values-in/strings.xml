@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SubmissionAwal</string>
+    <string name="signup">Daftar</string>
+    <string name="login">Masuk</string>
+    <string name="message_welcome_page">Menampilkan Story-Story Yang Unggul dan Bisa Membuat Anda Terkesima</string>
+    <string name="title_welcome_page">Selamat datang di Aplikasi Story!</string>
+    <string name="title_signup_page">Masukkan data dirimu di bawah ini ya</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="message_login_page">Isi Data dibawah ini yah</string>
+    <string name="title_login_page">Masuk Untuk Mengetahui seberapa menariknya aplikasi ini</string>
+    <string name="name">Nama</string>
+    <string name="message_main_page">Selamat Melihat Story Terbaik.</string>
+    <string name="logout">Keluar</string>
+    <string name="edt_text_email_register_page"> Masukkan Email Anda</string>
+    <string name="edt_text_person_register_page"> Nama Lengkap Anda</string>
+    <string name="list_gambar">List Gambar</string>
+    <string name="title_story">Judul Film</string>
+    <string name="deskripsi_story">Deskripsi</string>
+    <string name="add_item">Tambah Item</string>
+    <string name="home_story">Home Story</string>
+    <string name="camera_x">Kamera X</string>
+    <string name="input_gallery">Galeri</string>
+    <string name="btn_upload">Unggah</string>
+    <string name="take_image">Ambil Gambar</string>
+    <string name="empty_image_warning">Tidak ada Gambar</string>
+    <string name="title_activity_maps">Map aktivity</string>
+    <string name="str_language">Bahasa</string>
+    <string name="string_maps">Maps</string>
+    <string name="retry">Ulangi</string>
+    <string name="failed">Gagal Memuat Gambar</string>
+    <string name="succes">Berhasil!!!</string>
+    <string name="ok">OK</string>
+    <string name="img_upload_succes">Berhasil Meunggah gambar</string>
+    <string name="add_location">Tambah Lokasi</string>
+
+</resources>

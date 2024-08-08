@@ -1,0 +1,90 @@
+package com.example.submissionawal.ui.view.maps
+
+import android.content.res.Resources
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+import android.util.Log
+import androidx.activity.viewModels
+import com.example.submissionawal.R
+import androidx.lifecycle.Observer
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
+import com.example.submissionawal.databinding.ActivityMapsBinding
+import com.example.submissionawal.ui.viewmodel.maps.MapsViewModel
+import com.example.submissionawal.ui.viewmodelfactory.ViewModelFactory
+import com.google.android.gms.maps.model.MapStyleOptions
+
+class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
+
+    private lateinit var mMap: GoogleMap
+    private lateinit var binding: ActivityMapsBinding
+
+    private val mapsViewModel by viewModels<MapsViewModel> {
+        ViewModelFactory.getInstance(this)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        binding = ActivityMapsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+
+        val mapFragment = supportFragmentManager
+            .findFragmentById(R.id.map) as SupportMapFragment
+        mapFragment.getMapAsync(this)
+
+        mapsViewModel.fetchStoriesWithLocation()
+    }
+
+    override fun onMapReady(googleMap: GoogleMap) {
+        Log.d(TAG, "Map is ready")
+        mMap = googleMap
+
+        mMap.uiSettings.isZoomControlsEnabled = true
+
+        mapsViewModel.stories.observe(this, Observer { response ->
+            response.listStory.forEach { story ->
+                val lat = story.lat
+                val lon = story.lon
+                if (lat != null && lon != null) {
+                    val latLng = LatLng(lat, lon)
+                    mMap.addMarker(
+                        MarkerOptions()
+                            .position(latLng)
+                            .title(story.name)
+                            .snippet(story.description)
+                    )
+                }
+            }
+
+            // Move camera to the first location
+            response.listStory.firstOrNull()?.let {
+                val firstLocation = LatLng(it.lat ?: 0.0, it.lon ?: 0.0)
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(firstLocation, 5f))
+            }
+
+            setMapStyle()
+        })
+    }
+
+    private fun setMapStyle() {
+        try {
+            val success =
+                mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style))
+            if (!success) {
+                Log.e(TAG, "Style parsing failed.")
+            }
+        } catch (exception: Resources.NotFoundException) {
+            Log.e(TAG, "Can't find style. Error: ", exception)
+        }
+    }
+
+    companion object {
+        private const val TAG = "MapsActivity"
+    }
+}

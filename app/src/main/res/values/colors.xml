@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="hijau_gelap">#008C87</color>
+    <color name="navy">#2D3D4F</color>
+    <color name="putih_cream">#FFF3EC</color>
+    <color name="brown">#AF8787</color>
+    <color name="brown_light">#D6BEB0</color>
+    <color name="perak">#C0C0C0</color>
+</resources>

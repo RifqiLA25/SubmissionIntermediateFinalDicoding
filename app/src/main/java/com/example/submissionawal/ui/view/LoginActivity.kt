@@ -1,0 +1,169 @@
+package com.example.submissionawal.ui.view
+
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
+import android.content.Intent
+import android.os.Build
+import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.view.View
+import android.view.WindowInsets
+import android.view.WindowManager
+import android.widget.Toast
+import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
+import com.example.submissionawal.R
+import com.example.submissionawal.customview.MyButton
+import com.example.submissionawal.customview.PasswordEdit
+import com.example.submissionawal.data.local.room.UserDatabase
+import com.example.submissionawal.data.remote.response.ErrorResponse
+import com.example.submissionawal.databinding.ActivityLoginBinding
+import com.example.submissionawal.ui.viewmodel.LoginViewModel
+import com.example.submissionawal.ui.viewmodel.MainViewModel
+import com.example.submissionawal.ui.viewmodelfactory.ViewModelFactory
+import com.google.gson.Gson
+import kotlinx.coroutines.launch
+import retrofit2.HttpException
+
+class LoginActivity : AppCompatActivity() {
+
+    private val viewModel by viewModels<LoginViewModel> {
+        ViewModelFactory.getInstance(this)
+    }
+    private val viewMainModel by viewModels<MainViewModel> {
+        ViewModelFactory.getInstance(this)
+    }
+
+    private lateinit var binding: ActivityLoginBinding
+
+    private lateinit var edtPassword: PasswordEdit
+    private lateinit var tknButton: MyButton
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityLoginBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        tknButton = findViewById(R.id.loginButton)
+        edtPassword = findViewById(R.id.passwordEditTextLayout)
+
+        edtPassword.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                setButtonEnabled()
+            }
+
+            override fun afterTextChanged(s: Editable) {
+            }
+        })
+
+        setupView()
+        setupButton()
+        playAnimation()
+    }
+
+    private fun setAction(email: String?, password: String?) {
+        showLoading(true)
+        lifecycleScope.launch {
+            try {
+                val response = viewModel.loginView(email!!, password!!)
+                if (response != null) {
+                    val token = response.loginResult?.token
+                    viewModel.saveSession(UserDatabase(email, token!!, true))
+                    AlertDialog.Builder(this@LoginActivity).apply {
+                        setTitle("Berhasil!!!")
+                        setMessage("Anda berhasil login. Apakah Anda siap Melihat story terbaik??")
+                        setPositiveButton("Next") { _, _ ->
+                            redirectToMainScreen()
+                        }
+                        create()
+                        show()
+                        showLoading(false)
+                    }
+                }
+            } catch (e: HttpException) {
+                val jsonInString = e.response()?.errorBody()?.string()
+                val errorBody = Gson().fromJson(jsonInString, ErrorResponse::class.java)
+                val errorMessage = errorBody.message
+                showLoading(false)
+                Toast.makeText(this@LoginActivity, "$errorMessage", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun showLoading(isLoading: Boolean) {
+        binding.progressIndicator.visibility = if (isLoading) View.VISIBLE else View.GONE
+    }
+
+    private fun setupView() {
+        @Suppress("DEPRECATION")
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            window.insetsController?.hide(WindowInsets.Type.statusBars())
+        } else {
+            window.setFlags(
+                WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN
+            )
+        }
+        supportActionBar?.hide()
+    }
+
+    private fun setButtonEnabled() {
+        val result = edtPassword.text
+        tknButton.isEnabled = result != null && result.toString().isNotEmpty()
+    }
+
+    private fun setupButton() {
+        binding.loginButton.setOnClickListener {
+            val email = binding.edLoginEmail.text.toString()
+            val password = binding.passwordEditTextLayout.text.toString()
+            setAction(email, password)
+        }
+    }
+
+    private fun redirectToMainScreen() {
+        val intent = Intent(this, MainActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+        startActivity(intent)
+        finish()
+    }
+
+    private fun playAnimation() {
+        ObjectAnimator.ofFloat(binding.imageView, View.TRANSLATION_X, -30f, 30f).apply {
+            duration = 6000
+            repeatCount = ObjectAnimator.INFINITE
+            repeatMode = ObjectAnimator.REVERSE
+        }.start()
+
+        val title = ObjectAnimator.ofFloat(binding.titleTextView, View.ALPHA, 1f).setDuration(100)
+        val message =
+            ObjectAnimator.ofFloat(binding.messageTextView, View.ALPHA, 1f).setDuration(100)
+        val emailTextView =
+            ObjectAnimator.ofFloat(binding.emailTextView, View.ALPHA, 1f).setDuration(100)
+        val emailEditTextLayout =
+            ObjectAnimator.ofFloat(binding.emailEditTextLayout, View.ALPHA, 1f).setDuration(100)
+        val passwordTextView =
+            ObjectAnimator.ofFloat(binding.passwordTextView, View.ALPHA, 1f).setDuration(100)
+        val passwordEditTextLayout =
+            ObjectAnimator.ofFloat(binding.passwordEditTextLayout, View.ALPHA, 1f).setDuration(100)
+        val login = ObjectAnimator.ofFloat(binding.loginButton, View.ALPHA, 1f).setDuration(100)
+
+        AnimatorSet().apply {
+            playSequentially(
+                title,
+                message,
+                emailTextView,
+                emailEditTextLayout,
+                passwordTextView,
+                passwordEditTextLayout,
+                login
+            )
+            startDelay = 100
+        }.start()
+    }
+}
